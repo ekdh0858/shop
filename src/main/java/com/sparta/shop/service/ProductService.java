@@ -4,6 +4,7 @@ import com.sparta.shop.dto.ProductMypriceRequestDto;
 import com.sparta.shop.dto.ProductRequestDto;
 import com.sparta.shop.dto.ProductResponseDto;
 import com.sparta.shop.entity.Product;
+import com.sparta.shop.naver.dto.ItemDto;
 import com.sparta.shop.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,5 +50,13 @@ public class ProductService {
         }
 
         return responseDtoList;
+    }
+
+    @Transactional
+    public void updateBySearch(Long id, ItemDto itemDto) {
+        Product product = productRepository.findById(id).orElseThrow(()->
+            new NullPointerException("해당 상품은 존재하지 않습니다.")
+        );
+        product.updateByItemDto(itemDto);
     }
 }
