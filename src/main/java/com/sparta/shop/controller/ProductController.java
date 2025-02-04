@@ -5,10 +5,12 @@ import com.sparta.shop.dto.ProductRequestDto;
 import com.sparta.shop.dto.ProductResponseDto;
 import com.sparta.shop.entity.Product;
 import com.sparta.shop.repository.ProductRepository;
+import com.sparta.shop.security.UserDetailsImpl;
 import com.sparta.shop.service.ProductService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +28,8 @@ public class ProductController {
     private final ProductRepository productRepository;
 
     @PostMapping("/products")
-    public ProductResponseDto createProduct(@RequestBody ProductRequestDto requestDto) {
-        return productService.createProduct(requestDto);
+    public ProductResponseDto createProduct(@RequestBody ProductRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return productService.createProduct(requestDto,userDetails.getUser());
     }
 
     @PutMapping("/products/{id}")
@@ -36,9 +38,12 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public List<ProductResponseDto> getProducts(){
+    public List<ProductResponseDto> getProducts(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return productService.getProducts(userDetails.getUser());
+    }
 
-        return productService.getProducts();
-
+    @GetMapping("/admin/products")
+    public List<ProductResponseDto> getAllProducts(){
+        return productService.getAllProducts();
     }
 }
