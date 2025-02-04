@@ -1,11 +1,13 @@
 package com.sparta.shop.controller;
 
 import com.sparta.shop.dto.FolderRequestDto;
+import com.sparta.shop.dto.FolderResponseDto;
 import com.sparta.shop.security.UserDetailsImpl;
 import com.sparta.shop.service.FolderService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,5 +25,10 @@ public class FolderController {
 
         List<String> folderNames = folderRequestDto.getFolderNames();
         folderService.addFolders(folderNames, userDetails.getUser());
+    }
+
+    @GetMapping("/folders")
+    public List<FolderResponseDto> getFolders(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return folderService.getFolders(userDetails.getUser());
     }
 }
